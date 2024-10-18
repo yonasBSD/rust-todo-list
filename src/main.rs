@@ -6,7 +6,8 @@ use std::env;
 
 use todo::*;
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
     // Get a connection to the DB
@@ -21,6 +22,8 @@ fn main() -> Result<()> {
     let suffix = &args[2..].iter().cloned().collect::<Vec<_>>().join(" ");
 
     match command.as_str() {
+        "serve" => serve(),
+
         "add" => {
             if suffix.as_str().is_empty() {
                 help()?;
@@ -30,12 +33,14 @@ fn main() -> Result<()> {
             }
             Ok(())
         }
+
         "list" => {
             println!("TODO List (sorted by id):");
             let todos = Todo::list(&conn, false)?;
             Todo::print_list(todos)?;
             Ok(())
         }
+
         "toggle" => {
             if args.len() < 3 {
                 help()?;
@@ -47,6 +52,7 @@ fn main() -> Result<()> {
             }
             Ok(())
         }
+
         "reset" => {
             let confirmation = Confirm::new()
                 .with_prompt(
@@ -72,6 +78,7 @@ fn main() -> Result<()> {
             }
             Ok(())
         }
+
         "rm" => {
             if args.len() < 3 {
                 help()?;
@@ -83,12 +90,14 @@ fn main() -> Result<()> {
             }
             Ok(())
         }
+
         "sort" => {
             println!("TODO List (sorted by status):");
             let todos = Todo::list(&conn, true)?;
             Todo::print_list(todos)?;
             Ok(())
         }
+
         "help" | "--help" | "-h" | _ => help(),
     }?;
     Ok(())

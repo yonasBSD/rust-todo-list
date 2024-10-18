@@ -411,7 +411,7 @@ mod tests {
 /// ```
 
 #[tokio::main]
-async fn serve() -> Result<()> {
+pub async fn serve() -> Result<()> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
@@ -449,9 +449,13 @@ async fn serve() -> Result<()> {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
         .unwrap();
+
     tracing::debug!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app).await.unwrap();
+
+    Ok(())
 }
+
 // The query parameters for todos index
 #[derive(Debug, Deserialize, Default)]
 pub struct Pagination {

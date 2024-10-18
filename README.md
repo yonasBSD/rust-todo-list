@@ -16,7 +16,7 @@ If you are new to Rust and would like a better understanding on some of the codi
 Available commands:
 
     - add [TASK]
-        Ads new task/s
+        Adds new task/s
         Example: todo add "Build a tree"
 
     - list

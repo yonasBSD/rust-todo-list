@@ -147,7 +147,7 @@ pub fn help() -> Result<()> {
     let help_title = "\nAvailable commands:";
     let help_text = r#"    
         - add [TASK]
-            Ads new task/s
+            Adds new task/s
             Example: todo add "Build a tree"
 
         - list

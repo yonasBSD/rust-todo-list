@@ -7,7 +7,7 @@ use std::path::PathBuf;
 
 use axum::{
     error_handling::HandleErrorLayer,
-    extract::{Path, Query, State},
+    extract::{Path as ExtractPath, Query, State},
     http::StatusCode,
     response::IntoResponse,
     routing::{get, patch},
@@ -395,22 +395,23 @@ mod tests {
 }
 
 
-//! Provides a RESTful web server managing some Todos.
-//!
-//! API will be:
-//!
-//! - `GET /todos`: return a JSON list of Todos.
-//! - `POST /todos`: create a new Todo.
-//! - `PATCH /todos/{id}`: update a specific Todo.
-//! - `DELETE /todos/{id}`: delete a specific Todo.
-//!
-//! Run with
-//!
-//! ```not_rust
-//! cargo run -p example-todos
-//! ```
+/// Provides a RESTful web server managing some Todos.
+///
+/// API will be:
+///
+/// - `GET /todos`: return a JSON list of Todos.
+/// - `POST /todos`: create a new Todo.
+/// - `PATCH /todos/{id}`: update a specific Todo.
+/// - `DELETE /todos/{id}`: delete a specific Todo.
+///
+/// Run with
+///
+/// ```not_rust
+/// cargo run -p example-todos
+/// ```
 
-fn serve() -> Result<()> {
+#[tokio::main]
+async fn serve() -> Result<()> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
@@ -500,7 +501,7 @@ struct UpdateTodo {
 }
 
 async fn todos_update(
-    Path(id): Path<Uuid>,
+    ExtractPath(id): ExtractPath<Uuid>,
     State(db): State<Db>,
     Json(input): Json<UpdateTodo>,
 ) -> Result<impl IntoResponse, StatusCode> {
@@ -524,7 +525,7 @@ async fn todos_update(
     Ok(Json(todo))
 }
 
-async fn todos_delete(Path(id): Path<Uuid>, State(db): State<Db>) -> impl IntoResponse {
+async fn todos_delete(ExtractPath(id): ExtractPath<Uuid>, State(db): State<Db>) -> impl IntoResponse {
     if db.write().unwrap().remove(&id).is_some() {
         StatusCode::NO_CONTENT
     } else {

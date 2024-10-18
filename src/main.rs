@@ -22,7 +22,10 @@ async fn main() -> Result<()> {
     let suffix = &args[2..].iter().cloned().collect::<Vec<_>>().join(" ");
 
     match command.as_str() {
-        "serve" => serve(),
+        "serve" => {
+            let _ = serve().await;
+            Ok(())
+        }
 
         "add" => {
             if suffix.as_str().is_empty() {

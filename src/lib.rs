@@ -165,6 +165,9 @@ pub fn verify_db_path(db_folder: &str) -> Result<()> {
 pub fn help() -> Result<()> {
     let help_title = "\nAvailable commands:";
     let help_text = r#"    
+        - serve
+            Launch the HTTP REST API
+
         - add [TASK]
             Adds new task/s
             Example: todo add "Build a tree"
@@ -410,7 +413,6 @@ mod tests {
 /// cargo run -p example-todos
 /// ```
 
-#[tokio::main]
 pub async fn serve() -> Result<()> {
     tracing_subscriber::registry()
         .with(

@@ -106,7 +106,7 @@ pub fn truncate_at(input: &str, max: i32) -> String {
 
 // Returns a connection, creating the database if needed
 pub fn get_connection() -> Result<Connection> {
-    let db_folder = get_home() + "/" + "todo_db/";
+    let db_folder = get_home() + "/.local/state/todo.rs/";
     let db_file_path = db_folder.clone() + "todo.sqlite";
     verify_db_path(&db_folder)?;
     let conn = Connection::open(db_file_path)?;

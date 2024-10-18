@@ -60,7 +60,7 @@ You need to install [cargo-watch](https://crates.io/crates/cargo-watch).
 cargo install cargo-watch
 ```
 
-The executable will attempt to create a directory called `todo_db` in your `HOME` or `PROFILE` folder, depending on the OS you are using.
+The executable will attempt to create a directory called `~/.local/state/todo.rs` in your `HOME` or `PROFILE` folder, depending on the OS you are using.
 
 This directory is used to store the SQLITE database.
 

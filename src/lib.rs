@@ -14,7 +14,7 @@ use axum::{
     Json, Router,
 };
 use serde::{Deserialize, Serialize};
-use serde_this_or_that::as_bool;
+use serde_this_or_that::as_opt_bool;
 
 use std::{
     collections::HashMap,
@@ -505,8 +505,8 @@ async fn todos_create(State(db): State<Db>, Json(input): Json<CreateTodo>) -> im
 #[derive(Debug, Deserialize)]
 struct UpdateTodo {
     text: Option<String>,
-    #[serde(deserialize_with = "as_bool")]
-    completed: bool,
+    #[serde(deserialize_with = "as_opt_bool")]
+    completed: Option<bool>,
 }
 
 async fn todos_update(
@@ -525,7 +525,7 @@ async fn todos_update(
         todo.text = text;
     }
 
-    if let Some(completed) = Some(input.completed) {
+    if let Some(completed) = input.completed {
         todo.completed = completed;
     }
 

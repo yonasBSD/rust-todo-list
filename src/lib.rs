@@ -505,7 +505,8 @@ async fn todos_create(State(db): State<Db>, Json(input): Json<CreateTodo>) -> im
 #[derive(Debug, Deserialize)]
 struct UpdateTodo {
     text: Option<String>,
-    completed: Option<bool>,
+    #[serde(deserialize_with = "as_bool")]
+    completed: bool,
 }
 
 async fn todos_update(
@@ -524,7 +525,7 @@ async fn todos_update(
         todo.text = text;
     }
 
-    if let Some(completed) = input.completed {
+    if let Some(completed) = Some(input.completed) {
         todo.completed = completed;
     }
 
@@ -547,6 +548,5 @@ type Db = Arc<RwLock<HashMap<Uuid, Todo2>>>;
 struct Todo2 {
     id: Uuid,
     text: String,
-    #[serde(deserialize_with = "as_bool")]
     completed: bool,
 }

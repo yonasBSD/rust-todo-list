@@ -14,6 +14,8 @@ use axum::{
     Json, Router,
 };
 use serde::{Deserialize, Serialize};
+use serde_this_or_that::as_bool;
+
 use std::{
     collections::HashMap,
     sync::{Arc, RwLock},
@@ -404,8 +406,8 @@ mod tests {
 ///
 /// - `GET /todos`: return a JSON list of Todos.
 /// - `POST /todos`: create a new Todo.
-/// - `PATCH /todos/{id}`: update a specific Todo.
-/// - `DELETE /todos/{id}`: delete a specific Todo.
+/// - `PATCH /todos/:id`: update a specific Todo.
+/// - `DELETE /todos/:id`: delete a specific Todo.
 ///
 /// Run with
 ///
@@ -428,7 +430,7 @@ pub async fn serve() -> Result<()> {
     // Compose the routes
     let app = Router::new()
         .route("/todos", get(todos_index).post(todos_create))
-        .route("/todos/{id}", patch(todos_update).delete(todos_delete))
+        .route("/todo/:id", patch(todos_update).delete(todos_delete))
         // Add middleware to all routes
         .layer(
             ServiceBuilder::new()
@@ -541,9 +543,10 @@ async fn todos_delete(ExtractPath(id): ExtractPath<Uuid>, State(db): State<Db>) 
 
 type Db = Arc<RwLock<HashMap<Uuid, Todo2>>>;
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct Todo2 {
     id: Uuid,
     text: String,
+    #[serde(deserialize_with = "as_bool")]
     completed: bool,
 }
